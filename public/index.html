@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareRecipe - Culinary Community</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="dark-theme">
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-utensils"></i> ShareRecipe
+        </div>
+        <div class="nav-links">
+            <a href="#" data-section="home">Home</a>
+            <a href="#" data-section="browse">Browse</a>
+            <a href="#" id="feedLink" class="hidden" data-section="feed">My Feed</a>
+            <a href="#" id="createLink" class="hidden" data-section="create">Create</a>
+            <a href="#" id="adminLink" class="hidden" data-section="admin" style="color: var(--primary);">Admin</a>
+        </div>
+        <div class="auth-buttons">
+            <div id="unauth-controls">
+                <button class="btn btn-secondary" data-modal="login">Login</button>
+                <button class="btn btn-primary" data-modal="register">Sign Up</button>
+            </div>
+            <div id="auth-controls" class="hidden" style="display: flex; align-items: center; gap: 1rem;">
+                <button class="icon-btn" id="nav-collections-btn" title="My Collections">
+                    <i class="far fa-bookmark"></i>
+                </button>
+                <button class="icon-btn" id="nav-favorites-btn" title="My Favorites">
+                    <i class="far fa-heart"></i>
+                </button>
+                <div class="user-dropdown" style="position: relative;">
+                    <button class="user-trigger" id="user-menu-btn"
+                        style="background: none; border: none; color: var(--text-main); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 1rem;">
+                        <span id="user-name-display"></span>
+                        <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--text-muted);"></i>
+                    </button>
+                    <div id="user-dropdown-menu" class="dropdown-menu hidden">
+                        <a href="#" class="dropdown-item" data-section="profile">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="#" class="dropdown-item" id="logout-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <h1>Discover & Share <br><span class="highlight">Culinary Masterpieces</span></h1>
+            <p>Join our community of food enthusiasts. Browse thousands of recipes or share your own kitchen secrets.
+            </p>
+            <button class="btn btn-large btn-primary" data-section="browse">Explore Recipes</button>
+        </div>
+
+    </section>
+
+    <!-- Browse Section -->
+    <section id="browse" class="json-section hidden">
+        <div class="section-header browse-header">
+            <div class="browse-controls">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search recipes (e.g., Pasta, Vegan)...">
+                    <button id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <select id="filter-difficulty" class="filter-select">
+                            <option value="">All Difficulties</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <input type="number" id="filter-time" placeholder="Max Time (mins)" min="1">
+                    </div>
+                    <div class="filter-group">
+                        <select id="filter-dietary" class="filter-select">
+                            <option value="">All Dietary</option>
+                            <option value="Vegetarian">Vegetarian</option>
+                            <option value="Vegan">Vegan</option>
+                            <option value="Gluten-Free">Gluten-Free</option>
+                            <option value="Dairy-Free">Dairy-Free</option>
+                            <option value="Low-Carb">Low-Carb</option>
+                        </select>
+                    </div>
+                    <button id="apply-filters-btn" class="btn btn-secondary">Apply Filters</button>
+                </div>
+            </div>
+        </div>
+        <div id="recipe-grid" class="recipe-grid">
+            <!-- Recipes will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Feed Section -->
+    <section id="feed" class="json-section hidden">
+        <div class="section-header">
+            <h2>Activity Feed</h2>
+            <p style="color: var(--text-muted); margin-top: 0.5rem;">Latest recipes from people you follow</p>
+        </div>
+        <div id="feed-grid" class="recipe-grid">
+            <!-- Feed recipes will be loaded here -->
+        </div>
+    </section>
+
+
+
+    <!-- Favorites Section -->
+    <section id="favorites" class="json-section hidden">
+        <div class="section-header">
+            <h2>My Favorites</h2>
+            <p style="color: var(--text-muted); margin-top: 0.5rem;">Recipes you've saved for later</p>
+        </div>
+        <div id="favorites-grid" class="recipe-grid">
+            <!-- Favorited recipes will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Collections Section -->
+    <section id="collections" class="json-section hidden">
+        <div class="section-header">
+            <h2>My Collections</h2>
+            <button class="btn btn-primary" data-modal="create-collection">
+                <i class="fas fa-plus"></i> Create Collection
+            </button>
+        </div>
+        <div id="collections-list" class="collections-grid">
+            <!-- Collections will be loaded here -->
+        </div>
+        <div id="collection-detail" class="hidden">
+            <!-- Collection detail view will be shown here -->
+        </div>
+    </section>
+
+    <!-- Create Section -->
+    <section id="create" class="form-section hidden">
+        <h2>Share Your Recipe</h2>
+        <form id="create-recipe-form">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" required placeholder="e.g. Grandma's Apple Pie">
+            </div>
+            <div class="form-group">
+                <label>Description <span id="description-char-count"
+                        style="color: var(--text-muted); font-size: 0.85rem; font-weight: normal;">(0/500)</span></label>
+                <textarea name="description" id="description-input" required
+                    placeholder="Tell us about this dish... (Max 500 characters)" maxlength="500"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Time (mins)</label>
+                    <input type="number" name="cooking_time" required min="1" placeholder="e.g. 45"
+                        style="width: 100%;">
+                </div>
+                <div class="form-group">
+                    <label>Servings</label>
+                    <input type="number" name="servings" required min="1" placeholder="e.g. 4" style="width: 100%;">
+                </div>
+                <div class="form-group">
+                    <label>Difficulty</label>
+                    <select name="difficulty">
+                        <option value="Easy">Easy</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Hacky input for ingredients/steps -->
+            <div class="form-group">
+                <label>Ingredients (comma separated)</label>
+                <input type="text" name="ingredients" required placeholder="Flour, Sugar, Apples">
+            </div>
+            <div class="form-group">
+                <label>Instructions</label>
+                <textarea name="instructions" required placeholder="Step 1..."></textarea>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="button" id="cancel-recipe-btn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Publish Recipe</button>
+            </div>
+        </form>
+    </section>
+
+    </section>
+
+    <!-- Profile Section -->
+    <section id="profile" class="json-section hidden">
+        <div class="profile-container" style="max-width: 1000px; margin: 0 auto; padding: 2rem;">
+            <div class="section-header" style="padding: 0; margin-bottom: 2rem;">
+                <h2>My Profile</h2>
+                <button class="btn btn-secondary" id="edit-profile-btn">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profile-avatar-display">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info-display">
+                        <h3 id="profile-username">Loading...</h3>
+                        <p id="profile-email" style="color: var(--text-muted); margin-bottom: 1rem;"></p>
+                        <div id="profile-bio" class="profile-bio"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-recipes-section" style="margin-top: 4rem;">
+                <div class="section-header"
+                    style="padding: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                    <h3><i class="fas fa-book-open" style="color: var(--primary); margin-right: 0.5rem;"></i> My Recipes
+                    </h3>
+                </div>
+                <div id="my-recipes-grid" class="recipe-grid"
+                    style="padding: 0; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                    <!-- User's recipes will be loaded here -->
+                </div>
+            </div>
+
+            <div id="edit-profile-form-container" class="hidden" style="margin-top: 2rem;">
+                <h3>Edit Profile</h3>
+                <form id="edit-profile-form">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="edit-username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="edit-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Bio</label>
+                        <textarea id="edit-bio" name="bio" rows="4"></textarea>
+                    </div>
+                    <!-- Avatar URL (Optional for now) -->
+                    <div class="form-group">
+                        <label>Avatar URL</label>
+                        <input type="url" id="edit-avatar" name="avatar_url" placeholder="https://example.com/me.jpg">
+                    </div>
+
+                    <div class="form-group"
+                        style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <label>New Password (leave blank to keep current)</label>
+                        <input type="password" id="edit-password" name="password">
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="button" id="cancel-edit-profile-btn" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+    </section>
+
+    <!-- Public Profile Section -->
+    <section id="public-profile" class="json-section hidden">
+        <div class="profile-container" style="max-width: 1000px; margin: 0 auto; padding: 2rem;">
+            <div class="section-header" style="padding: 0; margin-bottom: 2rem;">
+                <h2 id="public-username-heading">User Profile</h2>
+                <button class="btn btn-secondary" onclick="showSection('browse')">
+                    <i class="fas fa-arrow-left"></i> Back to Browse
+                </button>
+            </div>
+
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="public-avatar-display">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info-display">
+                        <h3 id="public-username">Loading...</h3>
+                        <p id="public-joined" style="color: var(--primary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        </p>
+                        <div id="public-bio" class="profile-bio"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-recipes-section" style="margin-top: 4rem;">
+                <div class="section-header"
+                    style="padding: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                    <h3><i class="fas fa-book-open" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                        Contributed Recipes</h3>
+                </div>
+                <div id="public-recipes-grid" class="recipe-grid"
+                    style="padding: 0; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                    <!-- User's recipes will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section id="admin" class="json-section hidden">
+        <div class="section-header">
+            <h2>Admin Dashboard</h2>
+            <div class="admin-tabs">
+                <button class="btn btn-secondary active" id="admin-users-tab">Users</button>
+                <button class="btn btn-ghost" id="admin-recipes-tab">Recipes</button>
+                <button class="btn btn-ghost" id="admin-reviews-tab">Reviews</button>
+            </div>
+        </div>
+
+        <div id="admin-users-view">
+            <h3>User Management</h3>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-users-body">
+                        <!-- Users will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="admin-recipes-view" class="hidden">
+            <h3>Recipe Management</h3>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-recipes-body">
+                        <!-- Recipes will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="admin-reviews-view" class="hidden">
+            <h3>Review Management</h3>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Recipe</th>
+                            <th>Reviewer</th>
+                            <th>Rating</th>
+                            <th>Comment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-reviews-body">
+                        <!-- Reviews will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modals -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" data-close-modal="login">&times;</span>
+            <h2>Welcome Back</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" data-close-modal="register">&times;</span>
+            <h2>Join ShareRecipe</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="reg-username" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="reg-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Recipe Detail Modal -->
+    <div id="recipe-detail-modal" class="modal">
+        <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <span class="close" data-close-modal="recipe-detail">&times;</span>
+            <div id="recipe-detail-content">
+                <!-- Recipe details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Collection Modal -->
+    <div id="create-collection-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" data-close-modal="create-collection">&times;</span>
+            <h2>Create New Collection</h2>
+            <form id="create-collection-form">
+                <div class="form-group">
+                    <label>Collection Name</label>
+                    <input type="text" id="collection-name" required placeholder="e.g., Weeknight Dinners">
+                </div>
+                <div class="form-group">
+                    <label>Description (Optional)</label>
+                    <textarea id="collection-description" placeholder="What's this collection about?"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Create Collection</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add to Collection Modal -->
+    <div id="add-to-collection-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" data-close-modal="add-to-collection">&times;</span>
+            <h2>Add to Collection</h2>
+            <div id="collection-list-container">
+                <!-- User's collections will be listed here -->
+            </div>
+            <button class="btn btn-secondary btn-block" data-modal="create-collection" style="margin-top: 1rem;">
+                <i class="fas fa-plus"></i> Create New Collection
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

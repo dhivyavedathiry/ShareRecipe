@@ -1,0 +1,12 @@
+const express = require('express');
+const router = express.Router();
+const { getUserProfile, updateUserProfile, toggleFavorite, getPublicProfile } = require('../controllers/userController');
+const { protect } = require('../middlewares/authMiddleware');
+
+router.get('/profile', protect, getUserProfile);
+router.put('/profile', protect, updateUserProfile);
+router.get('/:id/public', getPublicProfile);
+router.post('/favorites/:recipeId', protect, toggleFavorite);
+
+
+module.exports = router;
