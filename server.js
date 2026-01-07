@@ -10,7 +10,16 @@ const PORT = process.env.PORT || 3000;
 const fs = require('fs');
 
 // Middleware
-app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            useDefaults: true,
+            directives: {
+                "upgrade-insecure-requests": null,
+            },
+        },
+    })
+);
 app.use(cors());
 app.use(morgan('dev'));
 const path = require('path');
